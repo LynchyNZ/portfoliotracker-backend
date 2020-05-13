@@ -1,0 +1,57 @@
+version: "3.3"
+services:
+  db:
+    container_name: portfoliotracker-db
+    restart: always
+    image: portfoliotracker-db
+    build:
+      context: ./db
+    volumes:
+      - db:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+    networks:
+      - network
+    ports:
+      - 5432:5432
+    stdin_open: true
+    tty: true
+
+  graphql:
+    container_name: portfoliotracker-graphql
+    restart: always
+    image: portfoliotracker-graphql
+    build:
+      context: ./graphql
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+    networks:
+      - network
+    ports:
+      - 5433:5433
+    command:
+      [
+        "--connection",
+        "${DATABASE_URL}",
+        "--port",
+        "5433",
+        "--schema",
+        "public",
+        "--default-role",
+        "portfoliotracker_anonymous",
+        "--jwt-secret",
+        "${JWT_SECRET}",
+        "--jwt-token-identifier",
+        "public.jwt_token",
+        "--append-plugins",
+        "postgraphile-plugin-connection-filter",
+        "--cors",
+      ]
+
+networks:
+  network:
+
+volumes:
+  db:
