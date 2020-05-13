@@ -42,11 +42,9 @@ and the graphiQL tool at
 
 ### Backend-specific Docker instructions
 
-You can run the server and DB in Docker containers using the following commands:
+You can run the server and DB in Docker containers using the following command:
 
 - `docker-compose up -d`
-
-  Builds the frontend in development mode (npm start)
 
 If you make changes to the database schema and need to re-initialise the database, run the following commands:
 1) `docker-compose down`
