@@ -1,9 +1,10 @@
-version: "3.3"
+version: "3.7"
+
 services:
   db:
-    container_name: portfoliotracker-db
+    container_name: db
     restart: always
-    image: portfoliotracker-db
+    image: db
     build:
       context: ./db
     volumes:
@@ -16,9 +17,9 @@ services:
     tty: true
 
   graphql:
-    container_name: portfoliotracker-graphql
+    container_name: graphql
     restart: always
-    image: portfoliotracker-graphql
+    image: graphql
     build:
       context: ./graphql
     env_file:
@@ -47,12 +48,14 @@ services:
       ]
 
   reverseproxy:
-    container_name: portfoliotracker-reverseproxy
+    container_name: reverseproxy
+    restart: always
+    image: reverseproxy
     build:
       context: ./reverseproxy
+      network: host
     ports:
       - 80:80
-    
 
 volumes:
   db:
